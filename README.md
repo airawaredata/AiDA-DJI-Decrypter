@@ -1,8 +1,6 @@
-Here is the updated `README.md` with a detailed section on how to set up a localhost server.
 
-### **README.md**
 
-````markdown
+
 # DJI DAT Decryptor
 
 A tool to decrypt `.DAT` flight log files exported by DJI Assistant 2. This project supports both a **Command Line Interface (CLI)** and a **Web Interface**.
