@@ -1,0 +1,30 @@
+{
+  "name": "dji-dat-decryptor",
+  "version": "1.0.1",
+  "description": "Decrypt DJI DAT files exported by Assistant 2",
+  "type": "module",
+  "main": "./src/cli.js",
+  "scripts": {
+    "build::cli": "npx webpack --config webpack.cli.cjs",
+    "build::web": "npx webpack --config webpack.web.cjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/D3VL/DJI-DAT-Decryptor.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/D3VL/DJI-DAT-Decryptor/issues"
+  },
+  "homepage": "https://github.com/D3VL/DJI-DAT-Decryptor#readme",
+  "dependencies": {
+    "aes-cmac": "^2.0.0",
+    "aes-js": "^3.1.2",
+    "fflate": "^0.7.4"
+  },
+  "devDependencies": {
+    "webpack": "^5.24.2",
+    "webpack-cli": "^4.10.0"
+  }
+}

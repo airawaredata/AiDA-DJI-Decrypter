@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAT Decryptor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>
+        :root {
+            --bg-color: #fafafa;
+            --text-main: #2c2c2c;
+            --text-muted: #888;
+            --accent: #2c2c2c;
+            --border-color: #e5e5e5;
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        /* --- BRANDING STYLES --- */
+        .brand-container {
+            position: absolute;
+            top: 2.5rem;
+            left: 2.5rem;
+            display: flex;
+            /* Aligns items in a row */
+            align-items: center;
+            /* Vertically centers them */
+            gap: 1rem;
+            /* Space between logo and text */
+            z-index: 100;
+        }
+
+        .brand-logo {
+            height: 60px;
+            /* Icon height */
+            width: auto;
+        }
+
+        .brand-text {
+            height: 25px;
+            /* Text height (usually slightly smaller looks better) */
+            width: auto;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 576px) {
+            .brand-container {
+                top: 1.5rem;
+                left: 1.5rem;
+                gap: 0.5rem;
+            }
+
+            .brand-logo {
+                height: 32px;
+            }
+
+            .brand-text {
+                height: 15px;
+            }
+        }
+
+        /* ----------------------- */
+
+        .main-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        h1 {
+            font-weight: 600;
+            font-size: 1.75rem;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        .badge-soft {
+            background-color: #f0f0f0;
+            color: #555;
+            font-weight: 500;
+            font-size: 0.75rem;
+            padding: 0.35em 0.8em;
+            border-radius: 6px;
+        }
+
+        .dropzone-card {
+            background: white;
+            border: 1px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.2s ease;
+            box-shadow: var(--card-shadow);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .dropzone-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .dropzone-icon {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .dropzone-text {
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        #file {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .progress-wrapper {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #f0f0f0;
+            display: none;
+        }
+
+        .progress-bar-custom {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .log-container {
+            margin-top: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .log-header {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            background: #fff;
+        }
+
+        .log {
+            height: 180px;
+            overflow-y: auto;
+            padding: 1rem;
+            font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .log::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .log::-webkit-scrollbar-thumb {
+            background-color: #e0e0e0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="brand-container">
+        <img src="assets/logo.png" alt="Logo" class="brand-logo">
+        <img src="assets/text.png" alt="Brand Text" class="brand-text">
+    </div>
+
+    <div class="container main-wrapper">
+
+        <div class="text-center">
+            <h1>DAT Decryptor</h1>
+            <p class="subtitle">
+                Securely decrypt your flight log files.<br>
+                <span class="badge-soft mt-2 d-inline-block">Supports Goggles 2, Avata & O3 Air Units</span>
+            </p>
+        </div>
+
+        <div class="dropzone-card">
+            <div class="dropzone-icon">↓</div>
+            <span class="dropzone-text d-none d-sm-block">Drag & drop .DAT file here</span>
+            <span class="dropzone-text d-sm-none">Tap to upload file</span>
+            <div class="small text-muted mt-2" id="filedropstatus" style="min-height: 20px;"></div>
+
+            <div class="progress-wrapper" id="progressWrapper">
+                <div class="progress-bar-custom" id="progressBar"></div>
+            </div>
+
+            <input type="file" id="file" accept=".dat">
+        </div>
+
+        <div class="log-container">
+            <div class="log-header">Process Log</div>
+            <div class="log" id="log">
+                <span style="color: #ccc;">Waiting for file...</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="decryptor.bundle.js"></script>
+    <script>
+        const logEl = document.querySelector('#log');
+        const progressBar = document.querySelector('#progressBar');
+        const progressWrapper = document.querySelector('#progressWrapper');
+        let isFirstLog = true;
+
+        const logItem = (item) => {
+            if (isFirstLog) {
+                logEl.innerHTML = '';
+                isFirstLog = false;
+            }
+            logEl.innerHTML += `<div>${item}</div>`;
+            logEl.scrollTop = logEl.scrollHeight;
+        };
+
+        const updateProgress = (percent) => {
+            progressBar.style.width = `${percent}%`;
+        };
+
+        const onFileDrop = async (file) => {
+            document.querySelector('#filedropstatus').innerHTML = file.name;
+
+            if (!file.name?.toLowerCase().endsWith('.dat')) {
+                document.querySelector('#filedropstatus').innerHTML = '<span class="text-danger">File is not a .DAT file!</span>';
+                document.querySelector('#file').value = '';
+                return;
+            }
+
+            // Reset UI
+            isFirstLog = true;
+            logEl.innerHTML = '';
+            progressWrapper.style.display = 'block';
+            updateProgress(0);
+
+            logItem(`Target: ${file.name}`);
+
+            const reader = new FileReader();
+            reader.readAsArrayBuffer(file);
+
+            reader.addEventListener('load', async (event) => {
+                const fileData = event.target.result;
+                logItem(`Size: ${(fileData.byteLength / 1024 / 1024).toFixed(2)} MB`);
+                logItem(`Status: Decrypting...`);
+
+                let parsedFile = null;
+                try {
+                    parsedFile = await DjiDatDecryptor.parseFile(new Uint8Array(fileData), (percent) => {
+                        updateProgress(percent);
+                    });
+                } catch (e) {
+                    logItem(`Error: ${e.message}`);
+                    progressWrapper.style.display = 'none';
+                    return;
+                }
+
+                if (!parsedFile || parsedFile.length === 0) {
+                    logItem(`Error: No valid files found inside.`);
+                    progressWrapper.style.display = 'none';
+                    return;
+                }
+
+                logItem(`Success: Decrypted ${parsedFile.length} internal files.`);
+                logItem(`Status: Compressing ZIP...`);
+
+                const zip = DjiDatDecryptor.zipResults(parsedFile);
+                logItem(`Status: Downloading...`);
+
+                const blob = new Blob([zip], { type: 'application/zip' });
+                const url = URL.createObjectURL(blob);
+
+                const dlLink = document.createElement('a');
+                dlLink.id = "download";
+                dlLink.href = url;
+                dlLink.download = `${file.name.replace('.DAT', '')}.zip`;
+                document.body.appendChild(dlLink);
+                dlLink.click();
+                dlLink.remove();
+
+                setTimeout(() => {
+                    logItem(`<br>Download missing? <a href="${url}" download="${file.name.replace('.DAT', '')}.zip" style="color:inherit; text-decoration: underline;">Click here</a>.`);
+                    progressWrapper.style.display = 'none';
+                }, 1000);
+            });
+        };
+
+        document.querySelector('#file').addEventListener('input', (e) => {
+            if (e.target.files.length > 0) {
+                onFileDrop(e.target.files[0]);
+            }
+        });
+    </script>
+</body>
+
+</html>
